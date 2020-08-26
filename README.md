@@ -164,7 +164,7 @@ Returns a Promise with a list of albums
 
 **Returns:**
 
-Array of `Album` object
+Array of `Album` object (iOS: 'Favorites')
   * title: {string}
   * count: {number}
 
@@ -194,7 +194,7 @@ Returns a Promise with photo identifier objects from the local camera roll of th
   * `Library`
   * `PhotoStream`
   * `SavedPhotos`
-* `groupName` : {string} : Specifies filter on group names, like 'Recent Photos' or custom album titles.
+* `groupName` : {string} : Specifies filter on group names, like 'Recent Photos' or custom album titles. (iOS - Favorites)
 * `assetType` : {string} : Specifies filter on asset type. Valid values are:
   * `All`
   * `Videos`
@@ -208,6 +208,8 @@ Returns a Promise with photo identifier objects from the local camera roll of th
   * `location`: Ensures `location` is available in each node. This has a large performance impact on Android.
   * `imageSize` : Ensures `image.width` and `image.height` are available in each node. This has a small performance impact on Android.
   * `playableDuration` : Ensures `image.playableDuration` is available in each node. This has a medium peformance impact on Android.
+* `sort` : {string} : iOS Only - creationDate, modificationDate, mediaType, favorite 
+
 
 Returns a Promise which when resolved will be of the following shape:
 
