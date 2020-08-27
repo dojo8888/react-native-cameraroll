@@ -204,10 +204,7 @@ RCT_EXPORT_METHOD(getAlbums:(NSDictionary *)params
   PHFetchOptions* options = [[PHFetchOptions alloc] init];
   PHFetchResult<PHAssetCollection *> *const assetCollectionFetchResult = [PHAssetCollection fetchAssetCollectionsWithType:PHAssetCollectionTypeAlbum subtype:PHAssetCollectionSubtypeAny options:options];
   NSMutableArray * result = [NSMutableArray new];
-  __block int favoriteAssetCount = 0;
   [assetCollectionFetchResult enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-//    PHFetchOptions *const assetFetchOptions = [RCTConvert PHFetchOptionsFromMediaType:mediaType fromTime:0 toTime:0];
-    // Enumerate assets within the collection
     PHFetchOptions* options = [[PHFetchOptions alloc] init];
     options.predicate = [NSPredicate predicateWithFormat:@"mediaType == %d", PHAssetMediaTypeImage];
 
@@ -217,13 +214,22 @@ RCT_EXPORT_METHOD(getAlbums:(NSDictionary *)params
         @"title": [obj localizedTitle],
         @"count": @(assetsFetchResult.count)
       }];
+    }
+  }];
+  
+  
+  __block int favoriteAssetCount = 0;
+  PHFetchOptions *fetchOptions = [PHFetchOptions new];
+  fetchOptions.predicate = [NSPredicate predicateWithFormat:@"(favorite == true) && (mediaType == %d)", PHAssetMediaTypeImage];
+  PHFetchResult<PHAsset *> * fetchResult = [PHAsset fetchAssetsWithOptions:fetchOptions];
+  for (PHAsset *asset in fetchResult) {
       for (PHAsset *asset in assetsFetchResult) {
           if (asset.favorite) {
               favoriteAssetCount++;
           }
       }
-    }
-  }];
+  }
+  
   [result addObject:@{
     @"title": @"Favorites",
     @"count": @(favoriteAssetCount)
@@ -294,14 +300,8 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
   // Filter collection name ("group")
   PHFetchOptions *const collectionFetchOptions = [PHFetchOptions new];
   collectionFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"endDate" ascending:NO]];
-  if (groupName != nil) {
-    if ([groupName isEqualToString:@"Favorites"]) {
-      
-    } else {
-      collectionFetchOptions.predicate = [NSPredicate predicateWithFormat:@"localizedTitle = %@", groupName];
-    }
-  }
-  
+  collectionFetchOptions.predicate = [NSPredicate predicateWithFormat:@"localizedTitle = %@", groupName];
+
   BOOL __block stopCollections_;
   NSString __block *currentCollectionName;
 
@@ -398,10 +398,10 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
       [assetFetchResult enumerateObjectsUsingBlock:collectAsset];
     } else {
       
-      if ([groupName isEqualToString:@"Favorite"]) {
+      if ([groupName isEqualToString:@"Favorites"]) {
         assetFetchOptions.predicate = [NSPredicate predicateWithFormat:@"(favorite == true) && (mediaType == %d)", PHAssetMediaTypeImage];
         PHFetchResult<PHAsset *> * fetchResult = [PHAsset fetchAssetsWithOptions:assetFetchOptions];
-        currentCollectionName = @"Favorite";
+        currentCollectionName = @"Favorites";
         [fetchResult enumerateObjectsUsingBlock:collectAsset];
 
       } else {
