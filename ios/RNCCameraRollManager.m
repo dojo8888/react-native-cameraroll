@@ -223,10 +223,8 @@ RCT_EXPORT_METHOD(getAlbums:(NSDictionary *)params
   fetchOptions.predicate = [NSPredicate predicateWithFormat:@"(favorite == true) && (mediaType == %d)", PHAssetMediaTypeImage];
   PHFetchResult<PHAsset *> * fetchResult = [PHAsset fetchAssetsWithOptions:fetchOptions];
   for (PHAsset *asset in fetchResult) {
-      for (PHAsset *asset in fetchResult) {
-          if (asset.favorite) {
-              favoriteAssetCount++;
-          }
+      if (asset.favorite) {
+          favoriteAssetCount++;
       }
   }
   
