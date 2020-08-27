@@ -399,7 +399,7 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
     } else {
       
       if ([groupName isEqualToString:@"Favorite"]) {
-        assetFetchOptions.predicate = [NSPredicate predicateWithFormat:@"(favorite == true) && (mediaType == %d)", ,PHAssetMediaTypeImage];
+        assetFetchOptions.predicate = [NSPredicate predicateWithFormat:@"(favorite == true) && (mediaType == %d)", PHAssetMediaTypeImage];
         PHFetchResult<PHAsset *> * fetchResult = [PHAsset fetchAssetsWithOptions:assetFetchOptions];
         currentCollectionName = @"Favorite";
         [fetchResult enumerateObjectsUsingBlock:collectAsset];
