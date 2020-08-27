@@ -282,6 +282,10 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
     assetFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"modificationDate" ascending:NO]];
   }
   
+  if ([groupName isEqualToString:@"Favorites"]) {
+    assetFetchOptions.predicate = [NSPredicate predicateWithFormat:@"favorite == true"];
+  }
+  
   BOOL __block foundAfter = NO;
   BOOL __block hasNextPage = NO;
   BOOL __block resolvedPromise = NO;
@@ -292,7 +296,7 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
   collectionFetchOptions.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"endDate" ascending:NO]];
   if (groupName != nil) {
     if ([groupName isEqualToString:@"Favorites"]) {
-      collectionFetchOptions.predicate = [NSPredicate predicateWithFormat:@"favorite == true"];
+      
     } else {
       collectionFetchOptions.predicate = [NSPredicate predicateWithFormat:@"localizedTitle = %@", groupName];
     }
