@@ -90,6 +90,8 @@ export type GetPhotosParams = {
    * might have some performance impact.
    */
   include?: Include[],
+
+  sort?: string
 };
 
 export type PhotoIdentifier = {
